@@ -1,0 +1,67 @@
+version: 1.0
+info:
+  name: PORTAL
+  version: 1.2.0
+  code: 8888
+  short-name: AGO
+  description: Agora - Portal
+components:
+  - build:
+      image: 
+      commands:
+      volumes:
+      vars:
+    bake:
+      image: k8seinescloudregistre.azurecr.io/gencatcloud/packer-baker:1.0
+      project: gencatcloud
+      infrastructure:
+        type: iaas
+        provider: aws
+        scm: https://gogs-aks.gencat.cat/8888/infrastructure.git
+      vars:
+        - packer-conf-filename: "aws-portal.json"
+    deployment:
+      type: delegated
+      infrastructure:
+        type: iaas
+        provider: aws        
+        scm: https://gogs-aks.gencat.cat/8888/infrastructure.git
+      environments:
+        - name: integration
+          deployment-type: automatic
+          actions:
+            before-deploy:
+              vars:
+                - pre-act-pre-var1: val1
+            deploy:
+              vars:
+                - int1: int-value1
+            after-deploy:
+              vars:
+                - post-act-pre-var1: val1
+        - name: training
+          deployment-type: automatic
+          actions:
+            deploy:
+              vars:
+                - trn1: trn-value1
+        - name: preproduction
+          deployment-type: automatic
+          staging: true
+          actions:
+            deploy:
+              vars:
+                - pre1: pre-value1
+        - name: production
+          deployment-type: automatic
+          confirmation:
+            required: true
+          production: true
+          actions:
+            deploy:  
+              vars:
+                - pro1: pro-value1
+notifications:
+  email:
+    recipients:
+      - marc.peremiquel@ticxcat.cat

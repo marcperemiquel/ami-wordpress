@@ -1,0 +1,4 @@
+*-manifest.json
+/roles/agora
+/roles/apache-php
+/roles/common

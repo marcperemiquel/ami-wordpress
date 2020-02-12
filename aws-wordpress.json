@@ -1,0 +1,50 @@
+{
+  "variables": {
+    "aws_access_key": "{{ env `AWS_ACCESS_KEY_ID`}}",
+    "aws_secret_key": "{{env `AWS_SECRET_ACCESS_KEY`}}",
+    "aws_region": "{{env `AWS_REGION`}}",
+    "ami_version": "{{env `AMI_VERSION`}}"
+  },
+
+  "builders": [
+    {
+      "type": "amazon-ebs",
+      "access_key": "{{user `aws_access_key`}}",
+      "secret_key": "{{user `aws_secret_key`}}",
+      "region": "{{user `aws_region`}}",
+      "source_ami": "ami-02df9ea15c1778c9c",
+      "instance_type": "t2.micro",
+      "ssh_username": "ubuntu",
+      "ami_name": "ago-wordpress-ami-{{user `ami_version`}}",
+      "tags": {
+        "Name": "ago-wordpress-ami-{{user `ami_version`}}",
+        "CodiAplicacio": "8888",
+        "CodiEntitat": "ENS",
+        "CodiInap": "XXX",
+        "CodiServei": "7_888",
+        "Entorn": "XXX"
+      }
+    }
+  ],
+
+  "provisioners": [
+    {
+      "type": "ansible",
+      "playbook_file": "ansible-playbook.yml",
+      "extra_arguments": [
+        "--tags", 
+        "common,wordpress"
+      ],
+      "galaxy_file": "roles/requirements.yml",
+      "galaxy_force_install": true,
+      "roles_path": "roles/"
+    }
+  ],
+
+  "post-processors": [
+    {
+      "type": "manifest",
+      "strip_path": true
+    }
+  ]
+}
