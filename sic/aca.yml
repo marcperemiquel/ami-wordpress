@@ -28,28 +28,35 @@ components:
         provider: aws
         scm: https://gogs-aks.gencat.cat/1051/iac-wordpress.git
         images:
-          before-deploy:
-            image: 
-          deploy:
-            image: slaves/terraform:1.0-0.12
-          after-deploy:
-            image: 
+          before-deploy: 
+          deploy: slaves/terraform:1.0-0.12
+          after-deploy: 
+          smoke-test: slaves/npm-builder:1.0-10
       environments:
         - name: training
           actions:
             deploy:
               env:
                 - value1: trn-value1
+            smoke-test:
+              env:
+                - value1: int-value-smoke-test-1
+              commands:
+                - "npm version"
         - name: preproduction
           actions:
             deploy:
               env:
                 - value1: pre-value1
+              commands:
+                - "npm version"
         - name: production
           actions:
             deploy:
               env:
                 - value1: pro-value1
+              commands:
+                - "npm version"
 notifications:
   email:
     recipients:
