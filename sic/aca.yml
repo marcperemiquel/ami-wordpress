@@ -1,66 +1,55 @@
-version: 1.0
+version: 1.0.0
 info:
   name: PORTAL
-  version: 1.2.0
-  code: 1051
+  version: 1.0.0
+  code: '1051'
   short-name: AGO
-  description: Agora - Portal
+  description: Agora - Wordpress
+  aci:
+    scm: https://gogs-aks.gencat.cat/aci/1051-wordpress-aci.git
 components:
   - build:
-      image: 
+      image: slaves/npm:1.0-10
       commands:
-      volumes:
-      vars:
+        - "npm version"
+      env:
+        - build_var1: "val1"
     bake:
-      image: k8seinescloudregistre.azurecr.io/gencatcloud/packer-baker:1.0
-      project: gencatcloud
       infrastructure:
         type: iaas
         provider: aws
-        scm: https://gogs-aks.gencat.cat/1051/infrastructure.git
-      vars:
-        - packer-conf-filename: "aws-portal.json"
+        scm: https://gogs-aks.gencat.cat/1051/ami-wordpress.git
+      image: slaves/packer:1.0-1.5
+      env:
+        - packer_conf_filename: "aws-wordpress.json"
     deployment:
-      type: delegated
       infrastructure:
         type: iaas
-        provider: aws        
-        scm: https://gogs-aks.gencat.cat/1051/infrastructure.git
+        provider: aws
+        scm: https://gogs-aks.gencat.cat/1051/iac-wordpress.git
+        images:
+          before-deploy:
+            image: 
+          deploy:
+            image: slaves/terraform:1.0-0.12
+          after-deploy:
+            image: 
       environments:
-        - name: integration
-          deployment-type: automatic
-          actions:
-            before-deploy:
-              vars:
-                - pre-act-pre-var1: val1
-            deploy:
-              vars:
-                - int1: int-value1
-            after-deploy:
-              vars:
-                - post-act-pre-var1: val1
         - name: training
-          deployment-type: automatic
           actions:
             deploy:
-              vars:
-                - trn1: trn-value1
+              env:
+                - value1: trn-value1
         - name: preproduction
-          deployment-type: automatic
-          staging: true
           actions:
             deploy:
-              vars:
-                - pre1: pre-value1
+              env:
+                - value1: pre-value1
         - name: production
-          deployment-type: automatic
-          confirmation:
-            required: true
-          production: true
           actions:
-            deploy:  
-              vars:
-                - pro1: pro-value1
+            deploy:
+              env:
+                - value1: pro-value1
 notifications:
   email:
     recipients:
