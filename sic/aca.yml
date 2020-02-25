@@ -2,7 +2,7 @@ version: 1.0
 info:
   name: PORTAL
   version: 1.2.0
-  code: 8888
+  code: 1051
   short-name: AGO
   description: Agora - Portal
 components:
@@ -17,7 +17,7 @@ components:
       infrastructure:
         type: iaas
         provider: aws
-        scm: https://gogs-aks.gencat.cat/8888/infrastructure.git
+        scm: https://gogs-aks.gencat.cat/1051/infrastructure.git
       vars:
         - packer-conf-filename: "aws-portal.json"
     deployment:
@@ -25,7 +25,7 @@ components:
       infrastructure:
         type: iaas
         provider: aws        
-        scm: https://gogs-aks.gencat.cat/8888/infrastructure.git
+        scm: https://gogs-aks.gencat.cat/1051/infrastructure.git
       environments:
         - name: integration
           deployment-type: automatic

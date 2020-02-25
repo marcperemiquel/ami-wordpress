@@ -1,16 +1,16 @@
 ---
 
 # role base common
-- src: git+https://gogs-aks.gencat.cat/8888/role-common.git
+- src: git+https://github.com/marcperemiquel/role-common.git
   version: origin/master
   name: common
 
 # role base apache-php
-- src: git+https://gogs-aks.gencat.cat/8888/role-apache-php.git
+- src: git+https://github.com/marcperemiquel/role-apache-php.git
   version: origin/master
   name: apache-php
 
 # role base agora
-- src: git+https://gogs-aks.gencat.cat/8888/role-agora.git
+- src: git+https://github.com/marcperemiquel/role-agora.git
   version: origin/master
   name: agora
