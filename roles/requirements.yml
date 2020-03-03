@@ -14,3 +14,8 @@
 - src: git+https://github.com/marcperemiquel/role-agora.git
   version: origin/master
   name: agora
+
+# role aws configs
+- src: git+https://github.com/marcperemiquel/role-aws-configs.git
+  version: origin/master
+  name: aws-configs
