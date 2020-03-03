@@ -33,30 +33,30 @@ components:
           after-deploy: 
           smoke-test: slaves/npm:1.0-10
       environments:
-        - name: training
+        - name: test
           actions:
             deploy:
               env:
-                - value1: trn-value1
+                - TF_ENV: tst
             smoke-test:
               env:
-                - value1: int-value-smoke-test-1
-              commands:
-                - "npm version"
+                - value1: tst-value-smoke-test-1
         - name: preproduction
           actions:
             deploy:
               env:
-                - value1: pre-value1
-              commands:
-                - "npm version"
+                - TF_ENV: pre
+            smoke-test:
+              env:
+                - value1: pre-value-smoke-test-1
         - name: production
           actions:
             deploy:
               env:
-                - value1: pro-value1
-              commands:
-                - "npm version"
+                - TF_ENV: pro
+            smoke-test:
+              env:
+                - value1: pro-value-smoke-test-1
 notifications:
   email:
     recipients:
