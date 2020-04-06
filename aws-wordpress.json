@@ -3,7 +3,7 @@
     "aws_access_key": "{{ env `AWS_ACCESS_KEY_ID`}}",
     "aws_secret_key": "{{env `AWS_SECRET_ACCESS_KEY`}}",
     "aws_region": "{{env `AWS_REGION`}}",
-    "ami_version": "{{env `AMI_VERSION`}}"
+    "ami_version": "{{env `SIC_VERSION`}}"
   },
 
   "builders": [
