@@ -1,12 +1,11 @@
-## Purpose
+## Wordpress AMI
 
-This AMI Builder example, creates a new AMI out of the latest Amazon Ubuntu AMI.
+This AMI Builder, creates a new Agora Wordpress AMI out of the latest Amazon Ubuntu AMI.
 
 ## Source code structure
 
 ```bash
 ├── roles                              <-- Roles used
-│    ├── requirements.yml              <-- Ansible galaxy file with roles to import
 │    ├── common                        <-- Application code
 │    │    ├── handlers
 │    │    │    └── main.yml            <-- Ansible file for handlers
@@ -19,12 +18,22 @@ This AMI Builder example, creates a new AMI out of the latest Amazon Ubuntu AMI.
 │    ├── apache-php                    <-- Install apache & php packages
 │    │    └── ...
 │    └── agora                         <-- Install and configure application
+│    │    └── ...
+│    └── aws-configs                   <-- Install and configure aws configurations
 │         └── ...
 ├── sic
 │    └── aca.yml                       <-- Main configuration SIC
-├── ansible-playbook.yml               <-- Wordpress ansible playbook file
+├── ansible-playbook.yml               <-- Moodle ansible playbook file
 ├── ansible.cfg                        <-- Ansible config
-├── aws-wordpress.yml                  <-- Wordpress packer configuration file
-├── ...                         	   <-- ...
+├── aws-moodle.yml                     <-- Moodle packer configuration file
+├── ...                         	     <-- ...
 └── README.md
+```
+
+## Locally run
+
+Test with Vagrant
+
+```bash
+vagrant up
 ```

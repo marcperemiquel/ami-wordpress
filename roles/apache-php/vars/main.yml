@@ -1,0 +1,61 @@
+---
+
+packages:
+  - name: apache2
+  - name: php7.3
+  - name: php7.3-curl
+  - name: php7.3-tidy
+  - name: php7.3-gd
+  - name: php7.3-xml
+  - name: php7.3-xmlrpc
+  - name: php7.3-intl
+  - name: php7.3-cli
+  - name: php-pear
+  - name: php7.3-dev
+  - name: php7.3-ldap
+  - name: libapache2-mod-php7.3
+  - name: php-codesniffer
+  - name: php7.3-mbstring
+  - name: php7.3-pgsql
+  - name: php7.3-mysql
+  - name: php-gettext
+  - name: php7.3-zip
+  - name: php7.3-soap
+
+directories:
+  - path: /dades
+  - path: /dades/data
+  - path: /dades/data/adminInfo
+  - path: /dades/data/portaldata
+  - path: /dades/data/portaldata/data
+  - path: /dades/data/portaldata/pnTemp
+  - path: /dades/html
+  - path: /dades/localdata
+  - path: /dades/localdata/syncdata
+  - path: /dades/data/wpdata
+
+php:
+  commands:
+    - sed -i '$ a\date.timezone = "Europe/Madrid"' /etc/php/7.3/apache2/php.ini
+    - sed -i "s/memory_limit = .*/memory_limit = 2048M/" /etc/php/7.3/apache2/php.ini
+    - sed -i "s/post_max_size = .*/post_max_size = 10M/" /etc/php/7.3/apache2/php.ini
+    - sed -i "s/upload_max_filesize = .*/upload_max_filesize = 10M/" /etc/php/7.3/apache2/php.ini
+    - sed -i "s/allow_url_fopen = .*/allow_url_fopen = On/" /etc/php/7.3/apache2/php.ini
+    - sed -i "s/max_execution_time = .*/max_execution_time = 300/" /etc/php/7.3/apache2/php.ini
+    - sed -i '$ a\date.timezone = "Europe/Madrid"' /etc/php/7.3/cli/php.ini
+    - sed -i "s/max_execution_time = .*/max_execution_time = 900/" /etc/php/7.3/cli/php.ini
+
+opcache:
+  commands:
+    - echo "opcache.enable=1" | sudo tee -a /etc/php/7.3/mods-available/opcache.ini
+    - echo "opcache.memory_consumption=256" | sudo tee -a /etc/php/7.3/mods-available/opcache.ini
+    - echo "opcache.max_accelerated_files=4000" | sudo tee -a /etc/php/7.3/mods-available/opcache.ini
+    - echo "opcache.revalidate_freq=86400" | sudo tee -a /etc/php/7.3/mods-available/opcache.ini
+    - echo "opcache.interned_strings_buffer=8" | sudo tee -a /etc/php/7.3/mods-available/opcache.ini
+    - echo "opcache.fast_shutdown=1" | sudo tee -a /etc/php/7.3/mods-available/opcache.ini
+    - echo "opcache.enable_cli=1" | sudo tee -a /etc/php/7.3/mods-available/opcache.ini
+    - echo "; Required for Moodle" | sudo tee -a /etc/php/7.3/mods-available/opcache.ini
+    - echo "opcache.use_cwd = 1" | sudo tee -a /etc/php/7.3/mods-available/opcache.ini
+    - echo "opcache.validate_timestamps = 1" | sudo tee -a /etc/php/7.3/mods-available/opcache.ini
+    - echo "opcache.save_comments = 1" | sudo tee -a /etc/php/7.3/mods-available/opcache.ini
+    - echo "opcache.enable_file_override = 0" | sudo tee -a /etc/php/7.3/mods-available/opcache.ini

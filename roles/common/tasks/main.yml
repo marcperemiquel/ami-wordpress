@@ -1,0 +1,39 @@
+---
+
+# General updates
+- name: Update all packages
+  apt:
+    update_cache: yes
+    upgrade: dist
+
+# Install dependencies
+- name: Install general deps
+  apt:
+    name: "{{ item }}"
+    state: latest
+    update_cache: yes
+  with_items:
+    - git
+    - unzip
+
+# Add PHP repo
+- name: Add ppa repository
+  apt_repository:
+    repo: ppa:ondrej/php
+
+# Locales
+- name: Ensure locales exists
+  locale_gen:
+    name: "{{ item.name }}"
+    state: present
+  with_items:
+    - "{{ locales }}"
+
+# Set Locale
+- name: Set default locale
+  command: localectl set-locale LANG={{ locale }}
+
+# Set timezone
+- name: Set timezone
+  timezone:
+    name: "{{ timezone }}"

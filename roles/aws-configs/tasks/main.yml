@@ -1,0 +1,100 @@
+---
+# tasks file for role-aws-configs
+
+- name: Install general deps
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - gcc
+    - g++
+    - python-pip
+    - python-setuptools
+    - binutils
+
+# Install memcached
+- name: Unarchive elasticache cluster client
+  unarchive:
+    src: https://elasticache-downloads.s3.amazonaws.com/ClusterClient/PHP-7.3/latest-64bit
+    dest: /usr/lib/php/20180731
+    remote_src: true
+# Config memcached php
+- name: Config elasticache client php
+  command: >
+    {{ item }}
+  args:
+      warn: false
+  with_items:
+    - echo "extension=amazon-elasticache-cluster-client.so" | sudo tee --append /etc/php/7.3/cli/php.ini
+    - echo "extension=amazon-elasticache-cluster-client.so" | sudo tee --append /etc/php/7.3/apache2/php.ini
+  notify:
+    - restart apache
+
+# CloudFormation agent
+- name: Create /opt/aws/bin/ directory
+  file:
+    path: "/opt/aws/bin/"
+    state: directory
+- name: CFN Bootstrap | Unarchive aws-cfn-bootstrap
+  unarchive:
+    src: https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz
+    dest: /opt/aws/bin
+    remote_src: true
+- name: CFN Bootstrap | Install CFN Bootstrap Module
+  command: python /usr/lib/python2.7/dist-packages/easy_install.py --script-dir /opt/aws/bin https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz
+
+ # CloudWatch agent
+- name: Download aws-cloudwatch-agent.deb file
+  get_url:
+    url: "https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb"
+    dest: "/tmp/cloudwatch-agent.deb"
+- name: Install aws-cloudwatch-agent.deb
+  apt:
+    deb: "/tmp/cloudwatch-agent.deb"
+    state: present
+- name: Config user group to read logs
+  command: usermod -a -G adm cwagent
+  args:
+      warn: false
+
+# Inspector agent
+- name: Download aws-inspector-agent bash file
+  get_url:
+    url: "https://inspector-agent.amazonaws.com/linux/latest/install"
+    dest: "/tmp/inspector-agent.sh"
+- name: Install bash inspector
+  shell: bash /tmp/inspector-agent.sh
+
+# EFS Utils
+- name: Download and unpack source from offical Github repo
+  unarchive:
+    src: "https://github.com/aws/efs-utils/archive/master.zip"
+    dest: "/tmp"
+    list_files: yes  # Includes destination folder name
+    remote_src: yes
+  register: efs_utils_archive
+- name: Store location of unarchived source dir
+  set_fact:
+    efs_utils_source_dir: "{{ efs_utils_archive.dest }}/{{ efs_utils_archive.files[0] }}"
+- name: Build EFS deb package
+  shell: ./build-deb.sh
+  args:
+    chdir: "{{ efs_utils_source_dir }}"
+    creates: build/amazon-efs-utils*deb
+- name: Install EFS deb package
+  shell: apt -y install ./build/amazon-efs-utils*deb
+  args:
+    chdir: "{{ efs_utils_source_dir }}"
+
+# Clean tmp
+- name: Remove tmp agents
+  file:
+    path: "{{ workdir }}"
+    state: absent
+  with_items:
+    - /tmp/cloudwatch-agent.deb
+    - /tmp/inspector-agent.sh
+- name: Remove efs
+  file:
+    path: "{{ efs_utils_source_dir }}"
+    state: absent

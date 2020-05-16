@@ -1,0 +1,44 @@
+<VirtualHost *:80>
+    ServerName ${SERVERNAME_AGORA}
+    ServerAdmin webmaster@localhost
+    DocumentRoot /dades/html
+
+    <Directory /dades/html/>
+        Options -Indexes +MultiViews +FollowSymLinks
+        AllowOverride all
+        Require all granted
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+
+<VirtualHost *:80>
+    ServerName ${SERVERNAME_PROJECTS}
+    ServerAdmin webmaster@localhost
+    DocumentRoot /dades/html
+
+    <Directory /dades/html/>
+        Options -Indexes +MultiViews +FollowSymLinks
+        AllowOverride all
+        Require all granted
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+
+<VirtualHost *:80>
+    ServerName ${SERVERNAME_SERVICES}
+    ServerAdmin webmaster@localhost
+    DocumentRoot /dades/html
+
+    <Directory /dades/html/>
+        Options -Indexes +MultiViews +FollowSymLinks
+        AllowOverride all
+        Require all granted
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>

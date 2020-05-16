@@ -1,0 +1,11 @@
+---
+
+locale: ca_ES.UTF-8
+
+locales:
+  - name: ca_ES
+  - name: ca_ES.UTF-8
+  - name: es_ES 
+  - name: es_ES.UTF-8 
+
+timezone: Europe/Madrid

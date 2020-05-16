@@ -1,0 +1,11 @@
+---
+
+workdir: /tmp/agora
+
+files:
+  -
+    src: /html/config/.htaccess-dist
+    dest: /html/config/.htaccess
+  -
+    src: /html/config/sync-config-dist.sh
+    dest: /html/config/sync-config.sh

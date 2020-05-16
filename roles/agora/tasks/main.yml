@@ -1,0 +1,68 @@
+---
+
+# Clone Agora git repo
+- git:
+    repo: https://github.com/projectestac/agora.git
+    version: aws
+    dest: "{{ workdir }}"
+    track_submodules: true
+
+- name: Copy multiple config files
+  copy:
+    src: "{{ workdir }}{{ item.src }}"
+    dest: "{{ workdir }}{{ item.dest }}"
+    remote_src: yes
+  with_items:
+    - "{{ files }}"
+  ignore_errors: yes
+
+- name: Copy specific config files
+  copy:
+    src: "{{ workdir }}{{ item.src }}"
+    dest: "{{ workdir }}{{ item.dest }}"
+    remote_src: yes
+  with_items:
+    -
+      src: "{{ workdir }}/html/wordpress/.htaccess-dist"
+      dest: "{{ workdir }}/html/wordpress/.htaccess"
+  ignore_errors: yes
+
+- name: Change permissions wordpress htaccess
+  file:
+    path: "{{ workdir }}/html/wordpress/.htaccess"
+    state: touch
+    mode: 440
+  ignore_errors: yes
+
+# Remove unused folders
+- name: Recursively remove directory moodle2
+  file:
+    path: "{{ workdir }}/html/moodle2/"
+    state: absent
+
+- name: Recursively remove directory portal
+  file:
+    path: "{{ workdir }}/html/portal/"
+    state: absent
+
+# Copy static files
+- name: Move static files
+  copy:
+    src: "{{ workdir }}/html/"
+    dest: /dades/html/
+    remote_src: yes
+
+# Recursively change ownership of /dades
+- name: Change ownership of /dades
+  file:
+    path: /dades
+    state: directory
+    recurse: yes
+    owner: www-data
+    group: www-data
+
+# Clean tmp
+- name: Clean agora project
+  file:
+    path: "{{ workdir }}"
+    state: absent

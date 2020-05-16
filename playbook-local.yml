@@ -1,0 +1,12 @@
+---
+
+- name: Local Agora Wordpress playbook
+  hosts: local
+  connection: local
+  become: true
+
+  roles:
+    - common
+    - apache-php
+    - agora
+    - aws-configs
